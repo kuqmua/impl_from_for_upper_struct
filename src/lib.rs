@@ -1,6 +1,3 @@
-use proc_macro::TokenStream;
-use quote::quote;
-
 /// struct and enum names must be like this
 /// pub struct StructNameError {
 ///     pub source: Box<StructNameErrorEnum>,
@@ -11,7 +8,9 @@ use quote::quote;
 ///     Two(Two),
 /// }
 #[proc_macro_derive(ImplFromForUpperStruct)]
-pub fn derive_impl_from_for_upper_struct(input: TokenStream) -> TokenStream {
+pub fn derive_impl_from_for_upper_struct(
+    input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
     let ast: syn::DeriveInput =
         syn::parse(input).expect("derive_impl_from_for_upper_struct syn::parse(input) failed");
     let variants = match ast.data {
@@ -42,20 +41,21 @@ pub fn derive_impl_from_for_upper_struct(input: TokenStream) -> TokenStream {
             ),
             Some(index) => {
                 let struct_ident = syn::Ident::new(&string_ident[..index], ident.span());
-                quote! {
+                quote::quote! {
                     impl From<#inner_enum_type> for #struct_ident {
                         fn from(error: #inner_enum_type) -> Self {
                             #struct_ident {
                                 source: Box::new(#ident::#variant(
                                     error,
                                 )),
-                    where_was: WhereWas {
-                        time: DateTime::<Utc>::from_utc(Local::now().naive_utc(), Utc)
-                            .with_timezone(&FixedOffset::east(CONFIG.timezone)),
-                        file: file!(),
-                        line: line!(),
-                        column: column!(),
-                    },
+                                where_was: WhereWas::new(
+                                    DateTime::<Utc>::from_utc(Local::now().naive_utc(), Utc)
+                                    .with_timezone(&FixedOffset::east(CONFIG.timezone)),
+                                    file!(),
+                                    line!(),
+                                    column!(),
+                                    None
+                                ),
                             }
                         }
                     }
@@ -63,7 +63,7 @@ pub fn derive_impl_from_for_upper_struct(input: TokenStream) -> TokenStream {
             }
         }
     });
-    let gen = quote! {
+    let gen = quote::quote! {
         #(#generated)*
     };
     gen.into()
