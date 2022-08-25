@@ -12,7 +12,7 @@ pub fn derive_impl_from_for_upper_struct(
     input: proc_macro::TokenStream,
 ) -> proc_macro::TokenStream {
     let ast: syn::DeriveInput =
-        syn::parse(input).expect("derive_impl_from_for_upper_struct syn::parse(input) failed");
+        syn::parse(input).expect("ImplFromForUpperStruct syn::parse(input) failed");
     let variants = match ast.data {
         syn::Data::Enum(enum_item) => enum_item.variants,
         _ => panic!("EnumIntoArray only works on enums"),
@@ -49,8 +49,8 @@ pub fn derive_impl_from_for_upper_struct(
                                     error,
                                 )),
                                 where_was: WhereWas::new(
-                                    DateTime::<Utc>::from_utc(Local::now().naive_utc(), Utc)
-                                    .with_timezone(&FixedOffset::east(CONFIG.timezone)),
+                                    chrono::DateTime::<chrono::Utc>::from_utc(chrono::Local::now().naive_utc(), chrono::Utc)
+                                    .with_timezone(&chrono::FixedOffset::east(crate::config_mods::lazy_static_config::CONFIG.timezone)),
                                     file!(),
                                     line!(),
                                     column!(),
