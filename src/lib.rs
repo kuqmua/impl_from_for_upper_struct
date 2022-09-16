@@ -48,9 +48,9 @@ pub fn derive_impl_from_for_upper_struct(
                                 source: Box::new(#ident::#variant(
                                     error,
                                 )),
-                                where_was: crate::helpers::where_was::WhereWas::new(
+                                where_was: tufa_common::where_was::WhereWas::new(
                                     chrono::DateTime::<chrono::Utc>::from_utc(chrono::Local::now().naive_utc(), chrono::Utc)
-                                    .with_timezone(&chrono::FixedOffset::east(crate::config_mods::lazy_static_config::CONFIG.timezone)),
+                                    .with_timezone(&chrono::FixedOffset::east(crate::lazy_static::config::CONFIG.timezone)),
                                     file!(),
                                     line!(),
                                     column!(),
