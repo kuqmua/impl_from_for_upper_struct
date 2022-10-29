@@ -8,5 +8,8 @@ version = "0.1.0"
 proc-macro = true
 
 [dependencies]
+proc-macro2 = "1.0.47"
 quote = "1.0.9"
 syn = "1.0.75"
+
+proc_macro_helpers = {path = "../proc_macro_helpers"}
