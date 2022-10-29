@@ -7,9 +7,24 @@
 ///     One(One),
 ///     Two(Two),
 /// }
-#[proc_macro_derive(ImplFromForUpperStruct)]
-pub fn derive_impl_from_for_upper_struct(
+
+#[proc_macro_derive(ImplFromForUpperStructFromTufaCommon)]
+pub fn derive_impl_from_for_upper_struct_from_tufa_common(
     input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    generate(input, proc_macro_helpers::path::Path::TufaCommon)
+}
+
+#[proc_macro_derive(ImplFromForUpperStructFromCrate)]
+pub fn derive_impl_from_for_upper_struct_from_crate(
+    input: proc_macro::TokenStream,
+) -> proc_macro::TokenStream {
+    generate(input, proc_macro_helpers::path::Path::Crate)
+}
+
+fn generate(
+    input: proc_macro::TokenStream,
+    path: proc_macro_helpers::path::Path,
 ) -> proc_macro::TokenStream {
     let ast: syn::DeriveInput =
         syn::parse(input).expect("ImplFromForUpperStruct syn::parse(input) failed");
@@ -41,8 +56,16 @@ pub fn derive_impl_from_for_upper_struct(
             ),
             Some(index) => {
                 let struct_ident = syn::Ident::new(&string_ident[..index], ident.span());
+                let where_was_token_stream = syn::Ident::new(
+                     &format!(
+                        "{}::where_was::WhereWas",
+                        path
+                    ),
+                    ident.span(),
+                );
                 quote::quote! {
                     impl From<#inner_enum_type> for #struct_ident {
+                        use #where_was_token_stream;
                         fn from(error: #inner_enum_type) -> Self {
                             #struct_ident {
                                 source: Box::new(#ident::#variant(
