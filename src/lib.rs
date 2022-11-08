@@ -73,7 +73,7 @@ fn generate(
                                 )),
                                 where_was: WhereWas::new(
                                     chrono::DateTime::<chrono::Utc>::from_utc(chrono::Local::now().naive_utc(), chrono::Utc)
-                                    .with_timezone(&chrono::FixedOffset::east(crate::lazy_static::config::CONFIG.timezone)),
+                                    .with_timezone(&chrono::FixedOffset::east(crate::once_cell_globals::config::CONFIG.timezone)),
                                     file!(),
                                     line!(),
                                     column!(),
