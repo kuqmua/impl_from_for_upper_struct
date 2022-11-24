@@ -1,3 +1,11 @@
+#![deny(
+    clippy::indexing_slicing,
+    clippy::integer_arithmetic,
+    clippy::unwrap_used,
+    clippy::float_arithmetic
+)]
+#![allow(clippy::too_many_arguments)]
+
 /// struct and enum names must be like this
 /// pub struct StructNameError {
 ///     pub source: Box<StructNameErrorEnum>,
